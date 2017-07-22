@@ -1,0 +1,8 @@
+---
+- name: commons playbook
+  hosts:
+    - kdc
+    - service
+    - client
+  roles:
+    - common

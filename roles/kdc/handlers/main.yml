@@ -1,0 +1,4 @@
+---
+
+- name: restart heimdal-kdc
+  service: name=heimdal-kdc state=restarted

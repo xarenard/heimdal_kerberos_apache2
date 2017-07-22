@@ -1,0 +1,10 @@
+<Location /server-status>
+    SetHandler server-status
+
+    AuthType Kerberos
+    AuthName "Kerberos authentication required"
+    KrbMethodNegotiate on
+    Require user ubuntu@{{domain_name|upper}}
+    KrbServiceName HTTP/service.{{domain_name}}
+    Krb5Keytab {{http_keytab_location}}
+</Location>

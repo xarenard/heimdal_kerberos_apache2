@@ -1,0 +1,6 @@
+---
+- name: firefox playbook
+  hosts:
+    - client
+  roles:
+    - firefox

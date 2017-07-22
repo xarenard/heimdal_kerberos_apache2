@@ -1,0 +1,14 @@
+---
+- name: Install firefox
+  apt:
+    name: firefox
+    update-cache: no
+    state: present
+  tags:
+    - firefox
+
+- name: Install Firefox preference file
+  template: src="x_kerb_preferences.js.j2" dest="/usr/lib/firefox/browser/defaults/preferences/x_kerberos_negotiate.js"
+  tags:
+    - firefox
+

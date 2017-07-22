@@ -1,0 +1,8 @@
+<VirtualHost *:80>
+    ServerName service.{{domain_name}}
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html
+    LogLevel trace8
+    ErrorLog ${APACHE_LOG_DIR}/service.{{domain_name}}_error.log
+    CustomLog ${APACHE_LOG_DIR}/service.{{domain_name}}_access.log combined
+</VirtualHost>

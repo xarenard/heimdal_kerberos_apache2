@@ -1,0 +1,6 @@
+---
+- name: apache2 playbook
+  hosts:
+    - service
+  roles:
+    - apache2

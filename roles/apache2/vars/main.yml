@@ -1,0 +1,3 @@
+---
+
+http_keytab_location: /etc/apache2/apache.keytab

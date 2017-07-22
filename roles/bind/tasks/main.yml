@@ -1,0 +1,38 @@
+---
+
+- name: Install bind9 package
+  apt:
+    name: bind9
+    update-cache: no
+    state: present
+  tags:
+    - bind
+
+- name: debug2
+  debug: msg="{{inventory_hostname}} {{ansible_hostname}} "
+
+- name: Install named conf
+  template: src="named.conf.local.j2" dest="/etc/bind/named.conf.local"
+  tags:
+    - bind
+
+- name: Create zones directory
+  file: path="/etc/bind/zones" state="directory"
+  tags:
+    - bind
+
+- name: Install Zone file
+  template: src="db.domain.j2" dest="/etc/bind/zones/db.{{ domain_name }}"
+  tags:
+    - bind
+
+- name: Install Reverse zone file
+  template: src="db.10.j2" dest="/etc/bind/zones/db.10"
+  notify: restart bind
+  tags:
+    - bind
+
+#- name: Restart bind server
+#  service: name="bind9" state="restarted"
+
+

@@ -1,0 +1,7 @@
+domain_name: example.xa
+k_admin_user: "{{ ansible_user}}/admin"
+k_admin_pwd: ubuntu
+internal_iface: enp0s8
+external_iface: enp0s3
+
+

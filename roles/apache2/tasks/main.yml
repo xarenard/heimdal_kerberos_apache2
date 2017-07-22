@@ -1,0 +1,62 @@
+---
+
+- name: Install apache package
+  apt:
+    name: apache2
+    update-cache: no
+    state: present
+  tags:
+    - apache
+
+
+- name: Install apache kerberos module package
+  apt:
+    name: libapache2-mod-auth-kerb
+    update-cache: no
+    state: present
+  tags:
+    - apache
+
+- name: Copy server-status configuration file
+  template: src="server-status.conf.j2" dest="/etc/apache2/conf-available/server-status.conf" owner="root" group="root" mode="0644"
+  tags:
+    - apache
+
+- name: Copy default site configuration file
+  template: src="000-default.conf.j2" dest="/etc/apache2/sites-available/000-default.conf" owner="root" group="root" mode="0644"
+  tags:
+    - apache
+
+- name: create HTTP keytab
+  shell: |
+    set timeout -1
+    spawn  kadmin -p {{k_admin_user}}
+    match_max 100000
+    expect -exact "kadmin> "
+    send -- "ext_keytab -k {{http_keytab_location}} HTTP/service.{{domain_name}}\r"
+    expect -exact "ext_keytab -k {{http_keytab_location}} HTTP/service.{{domain_name}}\r
+    {{k_admin_user}}@{{domain_name|upper}}'s Password: "
+    send -- "{{k_admin_pwd}}\r"
+    expect -exact "\r
+    kadmin> "
+    send -- "exit\r"
+    expect eof
+  args:
+   executable: expect
+  tags:
+    - apache
+
+- name: Change keytab permissions
+  file: path="{{ http_keytab_location }}" owner="www-data" mode="0644"
+  tags:
+    - apache
+
+#move the keytab
+#chown
+- name: Enable Server status
+  shell: "a2enconf server-status"
+  notify: restart apache
+  tags:
+    - apache
+
+

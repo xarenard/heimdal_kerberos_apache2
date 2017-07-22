@@ -1,0 +1,7 @@
+# {{inventory_hostname}}
+auto {{internal_iface}}
+iface {{internal_iface}} inet static
+      address {{ hostvars[inventory_hostname].ip_eth1 }}
+      netmask 255.255.255.0
+	  dns-nameservers 10.0.0.2
+

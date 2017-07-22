@@ -1,0 +1,3 @@
+kdc ansible_ssh_host=127.0.0.1 ansible_pass=vagrant ansible_ssh_port=10222 ip_eth1=10.0.0.2 ansible_ssh_key=/home/xavier/programmation/vagrant_heimdal/test/.vagrant/machines/kdc/virtualbox/private_key
+service ansible_ssh_host=127.0.0.1 ansible_pass=vagrant ansible_ssh_port=11222 ip_eth1=10.0.0.3
+client ansible_ssh_host=127.0.0.1 ansible_pass=vagrant ansible_ssh_port=12222 ip_eth1=10.0.0.4

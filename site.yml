@@ -1,0 +1,10 @@
+---
+- include: python.yml
+- include: common.yml
+- include: network.yml
+- include: bind.yml
+- include: kdc.yml
+- include: apache2.yml
+- include: firefox.yml
+
+

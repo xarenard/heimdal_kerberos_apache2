@@ -1,0 +1,53 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+#ENV["VAGRANT_DETECTED_OS"] = ENV["VAGRANT_DETECTED_OS"].to_s + " cygwin"
+
+  boxes = [
+    { base:"ubuntu/xenial64", name:"kdc", forwarded_port:12080,ip:"10.0.0.2",ssh_port:10222},
+   { base:"ubuntu/xenial64", name:"service", forwarded_port:10080,ip:"10.0.0.3",ssh_port:11222},
+   { base:"ubuntu/xenial64", name:"client", forwarded_port:11080,ip:"10.0.0.4",ssh_port:12222}
+  ]
+
+Vagrant.configure(2) do |config|
+  boxes.each_with_index do |boxe, index|
+    #boxe.gui = true
+    if "client" == boxe[:name]
+          config.ssh.forward_x11 = true
+    end
+
+    config.vm.define boxe[:name] do |b|
+        b.vm.box = boxe[:base]
+        
+        b.vm.network "forwarded_port",guest: 80,host:boxe[:forwarded_port]
+        b.vm.network :forwarded_port, guest: 22, host: boxe[:ssh_port], id: "ssh"
+        b.vm.network "private_network",ip:boxe[:ip], virtualbox__intnet: true,auto_config: false
+        b.vm.hostname = boxe[:name]
+        b.vm.provider "virtualbox" do |v|
+          #v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+          v.customize ["modifyvm", :id, "--cpus","1"]
+          v.customize ["modifyvm", :id, "--memory","1024"]
+          #if "client" == boxe[:name]
+           # v.gui = true
+          #end
+        end
+        #if "client" == boxe[:name]
+        
+        #end
+        #b.gui = false
+
+        #provisioning with ansible
+        #if index == boxes.size - 1
+        #    b.vm.provision "ansible" do |ansible|
+        #        ansible.playbook = "../site.yml"
+        #        ansible.inventory_path = "../inventories/vagrant/hosts"
+        #        ansible.sudo = true
+        #        ansible.host_key_checking = false
+        #        ansible.extra_vars = { ansible_ssh_user: 'vagrant'}
+        #        ansible.verbose = "v"
+        #        ansible.limit="all"
+        #        #ansible.tags = ""
+        #    end
+        #end
+    end
+  end
+end

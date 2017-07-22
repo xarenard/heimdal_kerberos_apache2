@@ -1,0 +1,8 @@
+---
+- name: Networlk playbook
+  hosts:
+    - client
+    - service
+    - kdc
+  roles:
+    - network

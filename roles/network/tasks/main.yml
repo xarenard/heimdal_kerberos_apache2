@@ -1,0 +1,21 @@
+---
+
+- name: Create internal interface
+  template: src="templates/internal_iface.cfg.j2" dest="/etc/network/interfaces.d/{{internal_iface}}.cfg" owner=root group=root mode=0644
+  tags:
+    - network
+
+- name: Copy interface order
+  template: src="interface-order.j2" dest="/etc/resolvconf/interface-order" owner="root" group="root" mode="0644"
+  tags:
+    - network
+
+- name: Restart all network interfaces except loopback device
+  command: "resolvconf -u"
+  tags:
+    - network
+
+- name: Restart all network interfaces except loopback device
+  shell: "ifdown --exclude=lo -a; sleep 1; ifup --exclude=lo -a"
+  tags:
+    - network

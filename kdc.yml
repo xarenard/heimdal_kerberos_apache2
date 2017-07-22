@@ -1,0 +1,6 @@
+---
+- name: kdc playbook
+  hosts:
+    - kdc
+  roles:
+    - kdc

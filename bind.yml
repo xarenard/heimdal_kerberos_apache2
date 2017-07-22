@@ -1,0 +1,6 @@
+---
+- name: bind playbook
+  hosts:
+    - kdc
+  roles:
+    - bind

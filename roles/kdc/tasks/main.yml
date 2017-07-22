@@ -1,0 +1,38 @@
+---
+
+- name: Install heimdal kdc package
+  apt:
+    name: heimdal-kdc
+    update-cache: no
+    state: present
+
+- name: Copy kadmin acl file
+  template: src="templates/kadmind.acl.j2"  dest="/etc/heimdal-kdc/kadmind.acl" owner="root" group="root" mode=0644
+  tags:
+    - kdc
+
+- name: Add HTTP principal
+  shell: "kadmin -l add --random-key --use-defaults HTTP/service.{{ domain_name }}"
+  ignore_errors: yes
+
+- name: Add admin user
+  shell: "kadmin -l add --max-ticket-life=unlimited --max-renewable-life=unlimited --expiration-time=never --pw-expiration-time=never --attributes= --policy=default --password={{ k_admin_pwd }} {{ k_admin_user }}"
+  ignore_errors: yes
+
+
+- name: Add ubuntu user
+  shell: "kadmin -l add --max-ticket-life=unlimited --max-renewable-life=unlimited --expiration-time=never --pw-expiration-time=never --attributes= --policy=default --password=ubuntu ubuntu"
+  ignore_errors: yes
+  tags:
+    - kdc
+
+- name: Add bob user
+  shell: "kadmin -l add --max-ticket-life=unlimited --max-renewable-life=unlimited --expiration-time=never --pw-expiration-time=never --attributes= --policy=default --password=bob bob"
+  ignore_errors: yes
+  tags:
+    - kdc
+
+- name: restart heimdal-kdc
+  service: name=heimdal-kdc state=restarted
+  tags:
+    - kdc
